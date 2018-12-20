@@ -1,0 +1,65 @@
+#!/bin/bash
+[--instance-initiated-shutdown-behavior <value>]
+image_id=ami-09693313102a30b2c
+instance_id=t2.micro
+vpc_id=vpc-08b950cd8140c7403
+key_name=user3
+security_group=...
+shutdown_type=shutdown
+
+start()
+{
+  private_ip_address="10.2.1.31"
+
+  aws ec2 run-instances \
+    --image-id "$image_id" \                                                    
+    --instance-type "$instance_type" \ 
+    --key-name <value>
+--security-groups <value>]
+
+
+
+[--additional-info <value>]
+[--client-token <value>]
+[--disable-api-termination | --enable-api-termination]
+ [--dry-run | --no-dry-run]
+[--ebs-optimized | --no-ebs-optimized]
+[--iam-instance-profile <value>]
+[--instance-initiated-shutdown-behavior <value>]
+[--network-interfaces <value>]
+[--private-ip-address <value>]
+[--elastic-gpu-specification <value>]
+[--elastic-inference-accelerators <value>]
+[--tag-specifications <value>]
+[--launch-template <value>]
+[--instance-market-options <value>]
+[--credit-specification <value>]
+[--cpu-options <value>]
+[--capacity-reservation-specification <value>]
+[--hibernation-options <value>]
+[--license-specifications <value>]:
+[--count <value>]
+[--secondary-private-ip-addresses <value>]
+[--secondary-private-ip-address-count <value>]
+[--associate-public-ip-address | --no-associate-public-ip-address]
+[--cli-input-json <value>]
+[--generate-cli-skeleton <value>]
+}
+
+stop()
+{
+ :
+}
+
+if [ "$1" = start ]; then
+	start
+elif [ "$1" = stop ]; then
+	stop
+else
+  cat <<EOF
+
+Usage:
+
+  $0 start|stop
+EOF
+fi

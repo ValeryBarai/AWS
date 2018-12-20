@@ -1,36 +1,49 @@
 #!/bin/bash
 
-image_id=ami-09693313102a30b2c
+USER_NAME=user3
 instance_type=t2.micro
+image_id=ami-02fc24d56bc5f3d67 #ami-09693313102a30b2c
 vpc_id=vpc-08b950cd8140c7403
-key_name=user3
-shutdown_type=stop
-subnet_id=subnet-060d8c5c243f86664
+KEY_NAME=user3
+SHUTDOWN_TYPE=stop
+SUBNET_ID=subnet-060d8c5c243f86664
 
-tags="ResourceType=instance,Tags=[{Key=installation_id,Value=user3-1}]"
+TAGS="ResourceType=instance,Tags=[{Key=installation_id,Value=${USER_NAME}-1},{Key=Name, Value=NAME}]"
 
-start()
+start_vm()
 {
-  private_ip_address="10.1.1.31"
-  public_ip=associate-public-ip-address
+  local private_ip_address="$1"
+  local public_ip_address="$2"
+  local name="$3"
+
+  local tags=$(echo $TAGS | sed s/NAME/$name/)
+  #local tags=$(TAGS/NAME/$name}
 
   aws ec2 run-instances \
     --image-id "$image_id" \
     --instance-type "$instance_type" \
-    --key-name "$key_name" \
-    --subnet-id "$subnet_id" \
-    --instance-initiated-shutdown-behavior "$shutdown_type" \
+    --key-name "$KEY_NAME" \
+    --subnet-id "$SUBNET_ID" \
+    --instance-initiated-shutdown-behavior "$SHUTDOWN_TYPE" \
     --private-ip-address "$private_ip_address" \
-    --tag-specifications "$tags" \
+    --tag-specifications "$TAGS" \
     --${public_ip}
-    :
+}
+
+
+start()
+{
+	start_vm 10.1.1.31 accociate-public-ip-address user3-vm1
+# for i in {2..3}; do
+#	start_vm 10.1.1.$((30+i)) no-accociate-public-ip-address user3-vm$i
+# done
 }
 
 stop()
 {                                                                               
   ids=($(                                                                       
       aws ec2 describe-instances \
-      --query 'Reservations[*].Instances[?KeyName==`'$key_name'`].InstanceId' \
+      --query 'Reservations[*].Instances[?KeyName==`'$KEY_NAME'`].InstanceId' \
       --output text                                                               
   ))                                                                            
   aws ec2 terminate-instances --instance-ids "${ids[@]}"                        

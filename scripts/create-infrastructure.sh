@@ -15,6 +15,7 @@ start_vm()
   local private_ip_address="$1"
   local public_ip_address="$2"
   local name="$3"
+  local user_data="$4"
 
   local tags=$(echo $TAGS | sed s/NAME/$name/)
   #local tags=$(TAGS/NAME/$name}
@@ -27,13 +28,16 @@ start_vm()
     --instance-initiated-shutdown-behavior "$SHUTDOWN_TYPE" \
     --private-ip-address "$private_ip_address" \
     --tag-specifications "$TAGS" \
+    --user-data "$user_data" \
     --${public_ip}
 }
 
 
 start()
 {
-	start_vm 10.1.1.31 accociate-public-ip-address user3-vm1
+	start_vm 10.1.1.31 accociate-public-ip-address user3-vm1 file://${PWD}/scripts/initial-command.sh
+# alternative configuration of file adding  			file://<( initial_command )
+
 # for i in {2..3}; do
 #	start_vm 10.1.1.$((30+i)) no-accociate-public-ip-address user3-vm$i
 # done
